@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="clr-namespace:VisualStateManagerExample.Behaviors;assembly=VisualStateManagerExample"
+             xmlns:viewModels="clr-namespace:VisualStateManagerExample.ViewModels;assembly=VisualStateManagerExample"
+             xmlns:xfx="clr-namespace:Xfx;assembly=Xfx.Controls"
+             x:Class="VisualStateManagerExample.MainPage">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <!-- View Model -->
+            <viewModels:MainViewModel x:Key="MainViewModel" />
+
+            <Style x:Key="PasswordEntry" TargetType="xfx:XfxEntry">
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList x:Name="ValidationStates">
+                        <VisualStateGroup>
+                            <VisualState x:Name="Empty">
+                                <VisualState.Setters>
+                                    <Setter Property="PlaceholderColor" Value="#7c0000"/>
+                                    <Setter Property="ActivePlaceholderColor" Value="#7c0000"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <VisualState x:Name="Minimal">
+                                <VisualState.Setters>
+                                    <Setter Property="PlaceholderColor" Value="#7c0000"/>
+                                    <Setter Property="ActivePlaceholderColor" Value="#7c0000"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <VisualState x:Name="Weak">
+                                <VisualState.Setters>
+                                    <Setter Property="PlaceholderColor" Value="#a30000"/>
+                                    <Setter Property="ActivePlaceholderColor" Value="#a30000"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <VisualState x:Name="Medium">
+                                <VisualState.Setters>
+                                    <Setter Property="PlaceholderColor" Value="#a2a000"/>
+                                    <Setter Property="ActivePlaceholderColor" Value="#a2a000"/>
+                                </VisualState.Setters>
+                            </VisualState>
+
+                            <VisualState x:Name="Strong">
+                                <VisualState.Setters>
+                                    <Setter Property="PlaceholderColor" Value="#74a100"/>
+                                    <Setter Property="ActivePlaceholderColor" Value="#74a100"/>
+                                </VisualState.Setters>
+                            </VisualState>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+
+    <Grid BindingContext="{StaticResource MainViewModel}">
+        <StackLayout HorizontalOptions="Fill"
+                     VerticalOptions="Center"
+                     Margin="5">
+
+            <!-- Use  XamarinForms Entry on UWP -->
+            <xfx:XfxEntry Style="{StaticResource PasswordEntry}"                         
+                          Text="{Binding Password.Value, Mode=OneWayToSource}"
+                          Placeholder="{Binding Password.Message}"
+                          IsPassword="True"
+                          HorizontalOptions="Fill">
+
+                <Entry.Behaviors>
+                    <behaviors:SetStateBehavior State="{Binding Password.State}"/>
+
+                    <behaviors:EventToCommandBehavior EventName="TextChanged"
+                                                      Command="{Binding ValidatePasswordCommand}"/>
+                </Entry.Behaviors>
+            </xfx:XfxEntry>
+            
+            <Button Text="Sing up" IsEnabled="{Binding Password.Valid}"/>
+
+        </StackLayout>
+    </Grid>
+
+</ContentPage>
